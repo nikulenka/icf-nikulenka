@@ -12,10 +12,20 @@ export function Contact() {
     setStatus('loading');
     
     try {
-      const response = await fetch('/api/contact', {
+      // Используем Web3Forms для отправки писем со статического сайта
+      const response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
+        },
+        body: JSON.stringify({
+          // ВАЖНО: Замените этот ключ на свой! Получить бесплатно: https://web3forms.com/
+          access_key: '46dfbf0e-8736-470d-9f89-dc66d003d01e', 
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+        }),
       });
       
       const data = await response.json();
@@ -25,7 +35,7 @@ export function Contact() {
         setFormData({ name: '', email: '', message: '' });
       } else {
         setStatus('error');
-        setErrorMessage(data.error || 'Произошла ошибка');
+        setErrorMessage(data.message || 'Произошла ошибка');
       }
     } catch (error) {
       setStatus('error');
