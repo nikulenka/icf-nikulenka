@@ -1,7 +1,9 @@
-import { motion } from 'motion/react';
-import { Target, Compass, Zap } from 'lucide-react';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { Target, Compass, Zap, Award, ChevronDown } from 'lucide-react';
 
 export function About() {
+  const [isCertOpen, setIsCertOpen] = useState(false);
   const features = [
     {
       icon: <Target className="h-6 w-6 text-indigo-600" />,
@@ -56,6 +58,58 @@ export function About() {
             </motion.div>
           ))}
         </div>
+
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="mt-16 max-w-3xl mx-auto"
+        >
+          <button
+            onClick={() => setIsCertOpen(!isCertOpen)}
+            className="w-full flex items-center justify-between p-6 bg-stone-50 rounded-2xl border border-stone-200 hover:border-indigo-200 transition-colors text-left"
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 shrink-0">
+                <Award className="w-5 h-5" />
+              </div>
+              <span className="text-lg font-medium text-stone-900">
+                Сертификат Professional Coach of International Level (ICF Level 2)
+              </span>
+            </div>
+            <motion.div
+              animate={{ rotate: isCertOpen ? 180 : 0 }}
+              transition={{ duration: 0.3 }}
+              className="shrink-0 ml-4"
+            >
+              <ChevronDown className="w-5 h-5 text-stone-400" />
+            </motion.div>
+          </button>
+
+          <AnimatePresence>
+            {isCertOpen && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="overflow-hidden"
+              >
+                <div className="p-6 mt-4 bg-white rounded-2xl border border-stone-100 shadow-sm">
+                  <img
+                    src="/certificate.png"
+                    alt="Сертификат ICF Level 2"
+                    className="w-full h-auto rounded-lg border border-stone-100"
+                  />
+                  <p className="text-sm text-stone-500 mt-4 text-center">
+                    European Coaching University • 150 часов обучения
+                  </p>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
       </div>
     </section>
   );
